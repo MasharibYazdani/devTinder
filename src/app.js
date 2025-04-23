@@ -3,6 +3,10 @@ const mongoose = require("mongoose");
 const { User } = require("./models/User");
 const { connectDB } = require("./config/database");
 
+const bcrypt = require("bcrypt");
+
+const { validateSignUp } = require("./utils/helper");
+
 const app = express();
 const port = 3000;
 
@@ -11,6 +15,51 @@ const { authAdmin } = require("./middlewares/auth");
 app.use(express.json());
 
 // app.use("/", authAdmin);
+
+app.post("/signup", async (req, res) => {
+  try {
+    validateSignUp(req);
+
+    const { firstName, lastName, emailId, password } = req.body;
+
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    const user = new User({
+      firstName,
+      lastName,
+      emailId,
+      password: hashPassword,
+    });
+
+    await user.save();
+
+    res.send("User added successfully");
+  } catch (error) {
+    res.status(400).send("Something went wrong " + error.message);
+  }
+});
+
+app.get("/login", async (req, res) => {
+  try {
+    const { emailId, password } = req.body.emailId;
+
+    const user = await User.findOne({ emailId: emailId });
+
+    if (!user) {
+      throw new Error("Invalid Credentials ");
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordCorrect) {
+      throw new Error("Invalid Credentials ");
+    }
+
+    res.send("User logged in successfully ");
+  } catch (error) {
+    res.status(400).send("Something went wrong. " + error.message);
+  }
+});
 
 app.get("/feed", async (req, res) => {
   try {
@@ -59,19 +108,6 @@ app.patch("/update/:id", async (req, res) => {
     res.send("User Updated Succesfully !");
   } catch (error) {
     res.status(400).send("User can't update " + error.message);
-  }
-});
-
-app.post("/signup", async (req, res) => {
-  try {
-    const data = req.body;
-    const user = new User(data);
-
-    await user.save();
-
-    res.send("User added successfully");
-  } catch (error) {
-    res.status(400).send("Something went wrong " + error.message);
   }
 });
 

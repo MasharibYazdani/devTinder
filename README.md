@@ -14,4 +14,6 @@ Created the server through express
 
 # added different type DB level Validation as well as API level Validation
 
-# npm validator install
+# npm install validator
+
+# npm install bcrypt

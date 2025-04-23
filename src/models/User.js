@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema(
       unique: true,
 
       validate(value) {
-        if (!validator.isEmail("value")) {
+        if (!validator.isEmail(value)) {
           throw new Error("Enter a valid email !");
         }
       },
@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema(
       required: true,
 
       validate(value) {
-        if (!isStrongPassword(value)) {
+        if (!validator.isStrongPassword(value)) {
           throw new Error("Enter a strong password !");
         }
       },
@@ -69,7 +69,7 @@ const userSchema = new mongoose.Schema(
         "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
 
       validate(value) {
-        if (!isURL(value)) {
+        if (!validator.isURL(value)) {
           throw new Error("Enter a valid URL !");
         }
       },
