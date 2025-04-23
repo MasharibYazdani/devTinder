@@ -37,14 +37,24 @@ app.get("/user", async (req, res) => {
   }
 });
 
-app.patch("/update", async (req, res) => {
+app.patch("/update/:id", async (req, res) => {
   try {
-    const email = req.body.emailId;
+    const userId = req.params?.id;
+    const data = req.body;
 
-    const data = await User.findOneAndUpdate(
-      { emailId: email },
-      { firstName: "King" }
+    const ALLOWED_UPDATES = ["age", "gender", "photURL", "skills", "about"];
+
+    const IS_UPDATE_ALLOWED = Object.keys(data).every((k) =>
+      ALLOWED_UPDATES.includes(k)
     );
+
+    if (!IS_UPDATE_ALLOWED) {
+      throw new Error(
+        "You can only update age, gender, photo, skills and about!"
+      );
+    }
+
+    await User.findByIdAndUpdate(userId, data, { runValidators: true });
 
     res.send("User Updated Succesfully !");
   } catch (error) {
@@ -56,6 +66,7 @@ app.post("/signup", async (req, res) => {
   try {
     const data = req.body;
     const user = new User(data);
+
     await user.save();
 
     res.send("User added successfully");
