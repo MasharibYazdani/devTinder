@@ -17,3 +17,11 @@ Created the server through express
 # npm install validator
 
 # npm install bcrypt
+
+# npm install cookie-parser
+
+# npm install jsonwebtoken
+
+# created middleware for user authentication
+
+# created schema level methods for jwt token and password verification
