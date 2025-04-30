@@ -25,3 +25,7 @@ Created the server through express
 # created middleware for user authentication
 
 # created schema level methods for jwt token and password verification
+
+# routing using express router
+
+# created all the apis's

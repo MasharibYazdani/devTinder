@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema(
     about: {
       type: String,
       default: "Hi I am a developer.",
+      maxLength: 500,
     },
 
     emailId: {
