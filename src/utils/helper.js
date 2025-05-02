@@ -1,4 +1,6 @@
 const validator = require("validator");
+const { User } = require("../models/User");
+const { ConnectionModel } = require("../models/Conncetion");
 
 const validateSignUp = (req) => {
   const { firstName, lastName, emailId, password } = req.body;
@@ -72,4 +74,49 @@ const validatePassword = async (req) => {
   return newPassword;
 };
 
-module.exports = { validateSignUp, validateEditData, validatePassword };
+const validateConnectionRequest = async (req) => {
+  const fromUserId = req.user._id;
+  const toUserId = req.params.userId;
+  const status = req.params.status;
+
+  const toUser = await User.findById(toUserId);
+
+  if (!toUser) {
+    throw new Error("User doesn't exist!");
+  }
+
+  const Allowed_Updates = ["interested", "ignored"];
+
+  if (!Allowed_Updates.includes(status)) {
+    throw new Error("Status can be only interested or ignored!");
+  }
+
+  if (fromUserId.equals(toUserId)) {
+    throw new Error("You can't send connection request to yourself!");
+  }
+
+  const requestSentByYou = await ConnectionModel.findOne({
+    fromUserId,
+    toUserId,
+  });
+
+  if (requestSentByYou) {
+    throw new Error("You have already sent request !");
+  }
+
+  const requestSentByThem = await ConnectionModel.findOne({
+    fromUserId: toUserId,
+    toUserId: fromUserId,
+  });
+
+  if (requestSentByThem) {
+    throw new Error("They have already sent you request !");
+  }
+};
+
+module.exports = {
+  validateSignUp,
+  validateEditData,
+  validatePassword,
+  validateConnectionRequest,
+};
