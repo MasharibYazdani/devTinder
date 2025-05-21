@@ -31,3 +31,5 @@ Created the server through express
 # created all the apis's
 
 # created request send and accept api's
+
+# create all the api's related to user like getting all requests, getting all connections and feed
