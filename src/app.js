@@ -6,9 +6,18 @@ const { authRouter } = require("./routers/authRouter");
 const { profileRouter } = require("./routers/profileRouter");
 const { requestRouter } = require("./routers/requestsRouter");
 const { userRouter } = require("./routers/userRouter");
+const cors = require("cors");
+
+require("dotenv").config();
 
 const app = express();
-const port = 3000;
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(cookieParser());
@@ -48,7 +57,7 @@ connectDB()
     console.log("DB Connected");
   })
   .then(() => {
-    app.listen(port, () => {
-      console.log(`Example app listening on port ${port}`);
+    app.listen(process.env.PORT, () => {
+      console.log(`Example app listening on port ${process.env.PORT}`);
     });
   });

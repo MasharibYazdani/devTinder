@@ -7,9 +7,9 @@ const bcrypt = require("bcrypt");
 profileRouter.get("/profile/view", authUser, async (req, res) => {
   try {
     const user = req.user;
-    res.send(user);
+    res.json(user);
   } catch (error) {
-    res.status(400).send("Something went wrong " + error.message);
+    res.status(401).send("Something went wrong " + error.message);
   }
 });
 
@@ -25,7 +25,7 @@ profileRouter.patch("/profile/edit", authUser, async (req, res) => {
     });
 
     await user.save();
-    res.send("User Updated Succesfully !");
+    res.json(user);
   } catch (error) {
     res.status(400).send("User can't update " + error.message);
   }

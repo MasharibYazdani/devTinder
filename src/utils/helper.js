@@ -22,7 +22,7 @@ const validateSignUp = (req) => {
 
 const validateEditData = (req) => {
   const data = req.body;
-  const ALLOWED_UPDATES = ["age", "gender", "photURL", "skills", "about"];
+  const ALLOWED_UPDATES = ["age", "gender", "photoURL", "skills", "about"];
 
   const IS_UPDATE_ALLOWED = Object.keys(data).every((key) =>
     ALLOWED_UPDATES.includes(key)
@@ -34,13 +34,13 @@ const validateEditData = (req) => {
     );
   }
 
-  const { age, gender, photURL, skills, about } = req.body;
+  const { age, gender, photoURL, skills, about } = req.body;
 
   if (age && age < 18) {
     throw new Error("Age should be greater than 18!");
   } else if (gender && !["Male", "Female", "Other"].includes(gender)) {
     throw new Error("Gender can be only Male, Female, or Other");
-  } else if (photURL && !validator.isURL(photURL)) {
+  } else if (photoURL && !validator.isURL(photoURL)) {
     throw new Error("Enter a valid URL");
   } else if (skills && skills.length > 10) {
     throw new Error("You can add up to 10 skills only");

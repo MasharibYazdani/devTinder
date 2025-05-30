@@ -4,7 +4,7 @@ const { authUser } = require("../middlewares/auth");
 const { User } = require("../models/User");
 const userRouter = express.Router();
 
-const userDetails = "firstName lastName photoUrl about skills";
+const userDetails = "firstName lastName photoURL about skills";
 
 userRouter.get("/user/requests", authUser, async (req, res) => {
   try {
@@ -17,15 +17,15 @@ userRouter.get("/user/requests", authUser, async (req, res) => {
       .sort({ createdAt: -1 })
       .populate("fromUserId", userDetails);
 
-    if (connectionRequest.length === 0) {
-      throw new Error("You don't have any connection request !");
-    }
+    // if (connectionRequest.length === 0) {
+    //   return res.json({ message: "You don't have any connection request !" });
+    // }
 
     const data = connectionRequest.map((request) => request.fromUserId);
 
     res.json({
       message: "All requests retrieved successfully !",
-      connectionRequest,
+      data: connectionRequest,
     });
   } catch (error) {
     res.status(400).json({ message: "Something went wrong " + error.message });
